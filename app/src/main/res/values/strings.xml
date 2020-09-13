@@ -29,12 +29,11 @@
     <string name="ln">ln</string>
     <string name="lf_break">(</string>
     <string name="rg_break">)</string>
-    <string name="sqr">√</string>
+    <string name="sqr">sqrt</string>
     <string name="x_y">x^y</string>
     <string name="x">x!</string>
     <string name="_1_x">1/x</string>
     <string name="mod">mod</string>
     <string name="pi">π</string>
     <string name="e">e</string>
-    <string name="convert">Convert</string>
 </resources>

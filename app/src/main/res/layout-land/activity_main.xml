@@ -1,294 +1,266 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/colorTextBackground"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.04000002" />
-
-    <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/colorTextBackground"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="0.035" />
-
     <GridLayout
+            android:id="@+id/gridLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
             android:columnCount="7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+                android:id="@+id/show_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTextBackground"
+                android:textSize="30sp"
+                android:layout_columnSpan="7"
+                android:layout_gravity="fill"
+                android:layout_marginBottom="10dp"
+                android:textAlignment="textEnd" tools:ignore="RtlCompat"/>
 
         <Button
                 android:id="@+id/button_sin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:text="@string/sin"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:onClick="sin"/>
 
         <Button
                 android:id="@+id/button_mod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:text="@string/mod"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:onClick="mod"/>
+
+        <TextView
+                android:id="@+id/result_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="3"
+                android:layout_gravity="fill"
+                android:background="@color/colorTextBackground"
+                android:layout_margin="3dp"
+                android:textSize="20sp"
+                android:textAlignment="textEnd" tools:ignore="RtlCompat"/>
 
         <Button
                 android:id="@+id/button_lf_break"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/lf_break" />
-
+                android:text="@string/lf_break"
+                android:onClick="leftBreak"/>
         <Button
                 android:id="@+id/button_rg_break"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/rg_break" />
-
-        <Button
-                android:id="@+id/button_e"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/e"
-                android:textAllCaps="false" />
-
-        <Button
-                android:id="@+id/button_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
-                android:layout_gravity="fill"
-                android:layout_margin="5dp"
-                android:text="@string/back" />
-
+                android:text="@string/rg_break"
+                android:onClick="rightBreak"/>
         <Button
                 android:id="@+id/button_cos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:text="@string/cos"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:onClick="cos"/>
 
         <Button
                 android:id="@+id/button_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/x_y" />
+                android:text="@string/x_y"
+                android:onClick="power"/>
 
         <Button
                 android:id="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_1" />
+                android:text="@string/_1"
+                android:onClick="digital"/>
 
         <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_2" />
+                android:text="@string/_2"
+                android:onClick="digital"/>
 
         <Button
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_3" />
+                android:text="@string/_3"
+                android:onClick="digital"/>
 
         <Button
                 android:id="@+id/button_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/add" />
+                android:text="@string/add"
+                android:onClick="operation"/>
+
+        <Button
+                android:id="@+id/button_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:onClick="back"/>
+
+        <Button
+                android:id="@+id/button_tan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tan"
+                android:textAllCaps="false"
+                android:onClick="tan"/>
+
+        <Button
+                android:id="@+id/button_factorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/x"
+                android:onClick="factorial"/>
+        <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_4"
+                android:onClick="digital"/>
+
+        <Button
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_5"
+                android:onClick="digital"/>
+
+        <Button
+                android:id="@+id/button6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_6"
+                android:onClick="digital"/>
+
+        <Button
+                android:id="@+id/button_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sub"
+                android:onClick="operation"/>
 
 
         <Button
                 android:id="@+id/button_C"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/c" />
-
-        <Button
-                android:id="@+id/button_tan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/tan"
-                android:textAllCaps="false" />
-
-        <Button
-                android:id="@+id/button_reciprocal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_1_x" />
-
-        <Button
-                android:id="@+id/button4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_4" />
-
-        <Button
-                android:id="@+id/button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_5" />
-
-        <Button
-                android:id="@+id/button6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_6" />
-
-        <Button
-                android:id="@+id/button_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/sub" />
-
-
-        <Button
-                android:id="@+id/button_CE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/ce" />
+                android:text="@string/c"
+                android:onClick="clear"/>
 
         <Button
                 android:id="@+id/button_ln"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:text="@string/ln"
-                android:textAllCaps="false" />
-
+                android:textAllCaps="false"
+                android:onClick="ln"/>
         <Button
-                android:id="@+id/button_factorial"
+                android:id="@+id/button_sqrt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/x" />
-
+                android:text="@string/sqr"
+                android:textAllCaps="false"
+                android:onClick="sqrt"/>
         <Button
                 android:id="@+id/button7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_7" />
+                android:text="@string/_7"
+                android:onClick="digital"/>
 
         <Button
                 android:id="@+id/button8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_8" />
+                android:text="@string/_8"
+                android:onClick="digital"/>
 
         <Button
                 android:id="@+id/button9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_9" />
+                android:text="@string/_9"
+                android:onClick="digital"/>
 
         <Button
                 android:id="@+id/button_mul"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/mul" />
+                android:text="@string/mul"
+                android:onClick="operation"/>
 
         <Button
-                android:id="@+id/button_eq"
+                android:id="@+id/button_CE"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="2"
-                android:layout_gravity="fill"
-                android:layout_margin="5dp"
-                android:text="@string/eq" />
+                android:text="@string/ce"
+                android:onClick="clearErr"/>
 
         <Button
-                android:id="@+id/button_log"
+                android:id="@+id/button_lg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:text="@string/lg"
-                android:textAllCaps="false" />
-
+                android:textAllCaps="false"
+                android:onClick="lg"/>
         <Button
-                android:id="@+id/button_sqr"
+                android:id="@+id/button_pi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/sqr" />
-
+                android:text="@string/pi"
+                android:textAllCaps="false"
+                android:onClick="piORe"/>
         <Button
-                android:id="@+id/button_point"
+                android:id="@+id/button_e"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/point" />
+                android:text="@string/e"
+                android:textAllCaps="false"
+                android:onClick="piORe"/>
 
         <Button
                 android:id="@+id/button0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/_0" />
+                android:text="@string/_0"
+                android:onClick="digital"/>
 
         <Button
-                android:id="@+id/button_pi"
+                android:id="@+id/button_point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/pi"
-                android:textAllCaps="false" />
-
+                android:text="@string/point"
+                android:onClick="point"/>
         <Button
                 android:id="@+id/button_div"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/Slash" />
+                android:text="@string/Slash"
+                android:onClick="operation"/>
+        <Button
+                android:id="@+id/button_eq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eq"
+                android:onClick="equals"/>
 
     </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
