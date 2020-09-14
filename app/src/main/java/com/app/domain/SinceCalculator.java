@@ -6,12 +6,12 @@ import java.util.*;
 
 
 public class SinceCalculator {
-    private static List<String> Conversion(Stack<String> saveStack) {
+    private static List<String> Conversion(Stack<String> stack) {
         //创建一个栈用于保存操作符
         Stack<String> opStack = new Stack<>();
         //创建一个list用于保存后缀表达式
         List<String> suffixList = new ArrayList<>();
-        for (String item : saveStack) {
+        for (String item : stack) {
             if (item.matches("[0-9]+.?[0-9]*")) suffixList.add(item); //是数字则直接入队
             else if ("(".equals(item)) opStack.push(item); //是左括号，压栈
             else if (")".equals(item)) {
@@ -24,7 +24,7 @@ public class SinceCalculator {
                     suffixList.add(opStack.pop());
                 }
             }
-            else {
+            else if ("+-*/^%".contains(item)) {
                 //是操作符 判断操作符栈是否为空
                 //否则将栈中元素出栈如队，直到遇到大于当前操作符或者遇到左括号时
                 //当前操作符压栈
@@ -33,6 +33,9 @@ public class SinceCalculator {
                         suffixList.add(opStack.pop());
                 //为空或者栈顶元素为左括号或者当前操作符大于栈顶操作符直接压栈
                 opStack.push(item);
+            }
+            else {
+                throw new RuntimeException("Illegal input");
             }
         }
         //循环完毕，如果操作符栈中元素不为空，将栈中元素出栈入队
@@ -64,7 +67,7 @@ public class SinceCalculator {
     /**
      * 根据后缀表达式list计算结果
      */
-    public static BigDecimal calculate(Stack<String> suffixList) {
+    public static BigDecimal calculate(Stack<String> suffixList) throws RuntimeException {
         List<String> list = Conversion(suffixList);
         Stack<BigDecimal> stack = new Stack<>();
         for (String item : list) {
@@ -94,7 +97,7 @@ public class SinceCalculator {
                         res = num1.divide(num2, 12, RoundingMode.HALF_UP);
                         break;
                     default:
-                        throw new RuntimeException("运算符错误！");
+                        throw new RuntimeException("Operator error");
                 }
                 stack.push(res);
             }

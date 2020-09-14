@@ -35,7 +35,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         String s = button.getText().toString();
                         Log.v("chick", sign + "," + numInput + "," + numSave + "," + show);
-                        calculation(s);
+                        try {
+                            calculation(s);
+                        } catch (ArithmeticException e) {
+                            initialization();
+                            showTextView.setText(e.getMessage());
+                        } catch (Exception e) {
+                            initialization();
+                            showTextView.setText(e.getMessage());
+                        }
                     }
                 });
             }
@@ -52,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean signFlag = false;
     private boolean equalsFlag = false;
     private boolean pointFlag = false;
-    private boolean zeroFlag = false;
 
     private void calculation(String str) {
         switch (str) {
@@ -108,11 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 resultTextView.setText(numInput);
                 break;
         }
-        if (zeroFlag) {
-            showTextView.setText("Division by zero");
-            zeroFlag = false;
-        }
-        else showTextView.setText(show);
+        showTextView.setText(show);
         Log.i("show", show);
         Log.i("result", numInput);
     }
@@ -121,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         equalsFlag = false;
         signFlag = false;
         pointFlag = false;
-        zeroFlag = false;
     }
 
     private void initialization() {
@@ -156,8 +158,7 @@ public class MainActivity extends AppCompatActivity {
             case ("*"):
                 return numSave.multiply(num);
             case ("/"):
-                if (num.equals(new BigDecimal(0))) zeroFlag = true;
-                else return numSave.divide(num, 12, BigDecimal.ROUND_HALF_UP);
+                return numSave.divide(num, 12, BigDecimal.ROUND_HALF_UP);
         }
         return new BigDecimal(0);
     }
