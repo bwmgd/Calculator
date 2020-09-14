@@ -1,12 +1,17 @@
 package com.app.myapplication;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.app.domain.SinceCalculator;
 import com.example.myapplication.R;
@@ -25,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         GridLayout gridLayout = findViewById(R.id.gridLayout);
-        showTextView = findViewById(R.id.show_textView);
-        resultTextView = findViewById(R.id.result_textView);
+        showTextView = findViewById(R.id.input_textView);
+        resultTextView = findViewById(R.id.output_textView);
         if (isOrientation()) {
             for (int i = 0; i < gridLayout.getChildCount(); i++) {
                 final Button button = (Button) gridLayout.getChildAt(i);
@@ -54,6 +60,20 @@ public class MainActivity extends AppCompatActivity {
             rightBreakCount = 0;
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @org.jetbrains.annotations.NotNull MenuItem item) {
+        Intent intent = new Intent(MainActivity.this, Conversion.class);
+        intent.putExtra("itemID", item.getItemId());
+        startActivity(intent);
+        return super.onOptionsItemSelected(item);
     }
 
     private String sign = "+";
@@ -296,12 +316,19 @@ public class MainActivity extends AppCompatActivity {
             saveStack.pop();
             showStack.pop();
         }
-        else saveNumInput();
+        else {
+            if (equalsFlag) {
+                String numInput = resultTextView.getText().toString();
+                landInitialization();
+                this.numInput = numInput;
+            }
+            saveNumInput();
+        }
         sign = str;
         saves(sign);
-        signFlag = true;
         numInput = "0";
         showText();
+        signFlag = true;
         equalsFlag = false;
         pointFlag = false;
     }
@@ -340,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
             landInitialization();
             showTextView.setText(e.getMessage());
         } finally {
-            equalsFlag = true;
+            signFlag = false;
             resultTextView.setText(numInput);
         }
     }
@@ -353,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
             landInitialization();
             showTextView.setText(e.getMessage());
         } finally {
-            equalsFlag = true;
+            signFlag = false;
             resultTextView.setText(numInput);
         }
     }
@@ -366,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
             landInitialization();
             showTextView.setText(e.getMessage());
         } finally {
-            equalsFlag = true;
+            signFlag = false;
             resultTextView.setText(numInput);
         }
     }
@@ -379,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
             landInitialization();
             showTextView.setText(e.getMessage());
         } finally {
-            equalsFlag = true;
+            signFlag = false;
             resultTextView.setText(numInput);
         }
     }
@@ -392,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
             landInitialization();
             showTextView.setText(e.getMessage());
         } finally {
-            equalsFlag = true;
+            signFlag = false;
             resultTextView.setText(numInput);
         }
     }
@@ -405,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
             landInitialization();
             showTextView.setText(e.getMessage());
         } finally {
-            equalsFlag = true;
+            signFlag = false;
             resultTextView.setText(numInput);
         }
     }
@@ -422,12 +449,18 @@ public class MainActivity extends AppCompatActivity {
             landInitialization();
             showTextView.setText(e.getMessage());
         } finally {
-            equalsFlag = true;
+            signFlag = false;
             resultTextView.setText(numInput);
         }
     }
 
     public void back(View view) {
+        if (equalsFlag) {
+            String numInput = resultTextView.getText().toString();
+            landInitialization();
+            this.numInput = numInput;
+            resultTextView.setText(numInput);
+        }
         show = resultTextView.getText().toString();
         if (show.equals("")) {
             if (showStack.isEmpty()) return;
@@ -440,8 +473,8 @@ public class MainActivity extends AppCompatActivity {
         if (!show.equals("") && show.charAt(show.length() - 1) == '.') pointFlag = true;
         else if (show.equals("") && !showStack.isEmpty()) {
             if ("+-*/^%".contains(showStack.peek())) signFlag = true;
-            else if (showStack.pop().matches("[0-9]+\\.?[0-9]*")) {
-                resultTextView.setText(showStack.peek());
+            else if (showStack.peek().matches("[0-9]+\\.?[0-9]*")) {
+                resultTextView.setText(showStack.pop());
                 saveStack.pop();
             }
         }

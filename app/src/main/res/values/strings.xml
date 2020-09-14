@@ -36,4 +36,15 @@
     <string name="mod">mod</string>
     <string name="pi">π</string>
     <string name="e">e</string>
+    <string name="length">长度</string>
+    <string name="weight">重量</string>
+    <string name="angle">角度</string>
+    <string name="temperature">温度</string>
+    <string name="time">时间</string>
+    <string name="base">进制</string>
+    <string name="positive">+/-</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="f">F</string>
+    <string name="d">D</string>
 </resources>

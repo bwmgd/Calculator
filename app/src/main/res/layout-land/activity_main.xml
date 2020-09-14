@@ -16,11 +16,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-                android:id="@+id/show_textView"
+                android:id="@+id/input_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorTextBackground"
                 android:textSize="30sp"
+                android:paddingStart="2dp"
                 android:paddingEnd="5dp"
                 android:layout_columnSpan="7"
                 android:layout_gravity="fill"
@@ -44,7 +45,7 @@
                 android:onClick="mod"/>
 
         <TextView
-                android:id="@+id/result_textView"
+                android:id="@+id/output_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnSpan="3"
@@ -52,6 +53,7 @@
                 android:background="@color/colorTextBackground"
                 android:layout_margin="3dp"
                 android:textSize="25sp"
+                android:paddingStart="3dp"
                 android:paddingEnd="3dp"
                 android:textAlignment="textEnd" tools:ignore="RtlCompat"/>
 

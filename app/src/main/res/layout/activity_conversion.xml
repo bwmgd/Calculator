@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.app.myapplication.MainActivity">
+        tools:context="com.app.myapplication.Conversion" android:id="@+id/input">
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -14,81 +14,72 @@
             android:elevation="4dp"
             app:title="Calculator"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.0"/>
-    <TextView
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
             android:id="@+id/input_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
-            android:textAlignment="viewEnd"
-            android:textSize="30sp"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:background="@color/colorTextBackground"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.16"
-            app:layout_constraintHorizontal_bias="0.0"
-    />
-    <TextView
+            android:autofillHints="" tools:ignore="LabelFor" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.03" app:layout_constraintHorizontal_bias="0.24"/>
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/input_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.03"
+            app:layout_constraintStart_toEndOf="@+id/input_textView"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
             android:id="@+id/output_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
-            android:textAlignment="viewEnd"
-            android:textSize="30sp"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:background="@color/colorTextBackground"
+            app:layout_constraintTop_toBottomOf="@+id/input_textView"
+            app:layout_constraintStart_toStartOf="@+id/input_textView"
+            app:layout_constraintEnd_toEndOf="@+id/input_textView" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.03" android:autofillHints="" tools:ignore="LabelFor"
+            android:focusable="false"/>
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/output_spinner"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.32"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.03"
+            app:layout_constraintTop_toTopOf="@+id/output_textView"
+            app:layout_constraintStart_toEndOf="@+id/output_textView"/>
+
     <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/output_textView"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/output_spinner"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:columnCount="4"
-            android:id="@+id/gridLayout">
+            android:columnCount="3"
+            android:id="@+id/gridLayout"
+            app:layout_constraintBottom_toTopOf="@+id/extraGridlayout">
         <Button
-                android:text="@string/c"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_C"
-                android:layout_margin="5dp"/>
-        <Button
-                android:text="@string/ce"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/button_CE"
-                android:layout_margin="5dp"/>
-        <Button
-                android:text="@string/back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/ce"
+                android:layout_margin="5dp"/>
+        <Button
                 android:id="@+id/button_back"
-                android:layout_columnSpan="2"
-                android:layout_gravity="fill"
-                android:layout_margin="5dp"
-        />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:layout_margin="5dp"/>
+        <Button
+                android:id="@+id/button_eq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eq"
+                android:layout_margin="5dp"/>
         <Button
                 android:text="@string/_1"
                 android:layout_width="wrap_content"
@@ -106,12 +97,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button3"
-                android:layout_margin="5dp"/>
-        <Button
-                android:text="@string/sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_sub"
                 android:layout_margin="5dp"/>
         <Button
                 android:text="@string/_4"
@@ -132,12 +117,6 @@
                 android:id="@+id/button6"
                 android:layout_margin="5dp"/>
         <Button
-                android:text="@string/mul"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_mul"
-                android:layout_margin="5dp"/>
-        <Button
                 android:text="@string/_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -156,16 +135,11 @@
                 android:id="@+id/button9"
                 android:layout_margin="5dp"/>
         <Button
-                android:text="@string/Slash"
+                android:id="@+id/button_positive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_div"
-                android:layout_margin="5dp"/>
-        <Button
-                android:text="@string/point"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_point"
+                android:text="@string/positive"
+                android:typeface="monospace"
                 android:layout_margin="5dp"/>
         <Button
                 android:text="@string/_0"
@@ -174,16 +148,59 @@
                 android:id="@+id/button0"
                 android:layout_margin="5dp"/>
         <Button
-                android:text="@string/add"
+                android:text="@string/point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_add"
+                android:id="@+id/button_point"
+                android:layout_margin="5dp"/>
+    </GridLayout>
+    <GridLayout
+            android:columnCount="3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/extraGridlayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/output_spinner" app:layout_constraintVertical_bias="1.0"
+            android:layout_marginBottom="20dp"
+            android:visibility="invisible">
+
+        <Button
+                android:text="@string/a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonA"
                 android:layout_margin="5dp"/>
         <Button
-                android:text="@string/eq"
+                android:text="@string/b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_eq"
+                android:id="@+id/buttonB"
+                android:layout_margin="5dp"/>
+        <Button
+                android:text="@string/c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonC"
+                android:layout_margin="5dp"/>
+        <Button
+                android:text="@string/d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonD"
+                android:layout_margin="5dp"/>
+        <Button
+                android:text="@string/e"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonE"
+                android:layout_margin="5dp"/>
+        <Button
+                android:text="@string/f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonF"
                 android:layout_margin="5dp"/>
     </GridLayout>
 
