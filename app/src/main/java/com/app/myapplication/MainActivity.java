@@ -12,13 +12,14 @@ import com.app.domain.SinceCalculator;
 import com.example.myapplication.R;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView showTextView;
     private TextView resultTextView;
-    private Stack<String> saveStack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
                         } catch (ArithmeticException e) {
                             initialization();
                             showTextView.setText(e.getMessage());
-                        } catch (Exception e) {
-                            initialization();
-                            showTextView.setText(e.getMessage());
+                            Log.getStackTraceString(e);
                         }
                     }
                 });
@@ -50,16 +49,22 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             saveStack = new Stack<>();
+            showStack = new Stack<>();
+            leftBreakCount = 0;
+            rightBreakCount = 0;
+
         }
     }
 
     private String sign = "+";
-    private BigDecimal numSave = new BigDecimal(0);
+    private BigDecimal numSave = BigDecimal.ZERO;
     private String numInput = "0";
     private String show = "";
     private boolean signFlag = false;
     private boolean equalsFlag = false;
     private boolean pointFlag = false;
+    private String display = "";
+    private static final DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
 
     private void calculation(String str) {
         switch (str) {
@@ -93,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "back":
                 if (!numInput.equals("")) {
-                    flagReset();
                     numInput = numInput.length() == 1 ? "0" : numInput.substring(0, numInput.length() - 1);
                     resultTextView.setText(numInput);
                 }
@@ -108,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             default:
-                pointFlag = false;
                 signFlag = false;
                 if (equalsFlag) initialization();
                 numInput = numInput.equals("0") ? str : (numInput + str);
@@ -129,16 +132,9 @@ public class MainActivity extends AppCompatActivity {
     private void initialization() {
         flagReset();
         sign = "+";
-        numSave = new BigDecimal(0);
+        numSave = BigDecimal.ZERO;
         numInput = "0";
         show = "";
-    }
-
-    private void landInitialization() {
-        initialization();
-        showTextView.setText("");
-        saveStack.clear();
-        resultTextView.setText("0");
     }
 
     private BigDecimal result(String str) {
@@ -160,55 +156,96 @@ public class MainActivity extends AppCompatActivity {
             case ("/"):
                 return numSave.divide(num, 12, BigDecimal.ROUND_HALF_UP);
         }
-        return new BigDecimal(0);
+        return BigDecimal.ZERO;
     }
+
+
+    private Stack<String> saveStack;
+    private Stack<String> showStack;
+    private int leftBreakCount;
+    private int rightBreakCount;
 
     private boolean isOrientation() {
         return this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
-
-    public void sin(View view) {
-
+    private String getStr(View view) {
+        Button button = (Button) view;
+        return button.getText().toString();
     }
 
-    public void cos(View view) {
-
+    private void showText() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : showStack) stringBuilder.append(s);
+        showTextView.setText(stringBuilder);
     }
 
-    public void tan(View view) {
-
+    private void saveNumInput() {
+        if (numInput.matches("\\d+\\.$")) numInput = numInput.substring(0, numInput.length() - 1);
+        saves(numInput);
     }
 
-    public void ln(View view) {
-
+    private void saves(String str) {
+        if (display.equals("")) showStack.add(str);
+        else {
+            showStack.add(display);
+            display = "";
+        }
+        saveStack.add(str);
     }
 
-    public void lg(View view) {
-
-    }
-
-    public void factorial(View view) {
-
-    }
-
-    public void sqrt(View view) {
-
+    private void landInitialization() {
+        initialization();
+        display = "";
+        showTextView.setText("");
+        saveStack.clear();
+        showStack.clear();
+        resultTextView.setText("0");
+        leftBreakCount = rightBreakCount = 0;
     }
 
     public void piORe(View view) {
-
+        String str = getStr(view);
+        if (!signFlag) {
+            numInput = resultTextView.getText().toString();
+            if (!numInput.equals("") && !numInput.equals("0")) saveNumInput();
+            if (!saveStack.isEmpty()) saves("*");
+        }
+        if (equalsFlag) landInitialization();
+        numInput = str;
+        showText();
+        resultTextView.setText(str);
+        signFlag = false;
     }
 
     public void leftBreak(View view) {
-
+        if (!signFlag) {
+            numInput = resultTextView.getText().toString();
+            if (!numInput.equals("") && !numInput.equals("0")) saveNumInput();
+            if (!saveStack.isEmpty()) saves("*");
+        }
+        if (equalsFlag) landInitialization();
+        saves("(");
+        showText();
+        resultTextView.setText("(");
+        flagReset();
+        leftBreakCount++;
+        numInput = "0";
     }
 
     public void rightBreak(View view) {
-
-    }
-
-    public void back(View view) {
+        if (leftBreakCount > rightBreakCount) {
+            if (signFlag) {
+                saveStack.pop();
+                showStack.pop();
+            }
+            saveNumInput();
+            numInput = ")";
+            showText();
+            resultTextView.setText(")");
+            flagReset();
+            rightBreakCount++;
+        }
 
     }
 
@@ -217,17 +254,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearErr(View view) {
-        flagReset();
         numInput = "0";
         resultTextView.setText("0");
     }
 
     public void equals(View view) {
-        equalsFlag = true;
-        saveStack.add(numInput);
-        numSave = SinceCalculator.calculate(saveStack);
-        show();
-        resultTextView.setText(numSave.stripTrailingZeros().toString());
+        try {
+            if (equalsFlag) landInitialization();
+            else {
+                if (signFlag) throw new RuntimeException("Illegal input");
+                saveNumInput();
+                numSave = SinceCalculator.calculate(saveStack);
+                showText();
+                showTextView.setText(showTextView.getText() + "=");
+                resultTextView.setText(numSave.stripTrailingZeros().toPlainString());
+            }
+        } catch (Exception e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+            Log.getStackTraceString(e);
+        } finally {
+            flagReset();
+            equalsFlag = true;
+        }
     }
 
     public void mod(View view) {
@@ -243,43 +292,158 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void operation(String str) {
-        equalsFlag = false;
-        pointFlag = false;
-        if (signFlag) saveStack.pop();
-        else saveStack.add(numInput);
+        if (signFlag) {
+            saveStack.pop();
+            showStack.pop();
+        }
+        else saveNumInput();
         sign = str;
-        saveStack.add(sign);
+        saves(sign);
         signFlag = true;
         numInput = "0";
-        show();
+        showText();
+        equalsFlag = false;
+        pointFlag = false;
     }
 
     public void digital(View view) {
-        pointFlag = false;
-        signFlag = false;
         String str = getStr(view);
         if (equalsFlag) landInitialization();
         numInput = numInput.equals("0") ? str : (numInput + str);
         resultTextView.setText(numInput);
+        signFlag = false;
     }
 
     public void point(View view) {
         if (!pointFlag) {
-            pointFlag = true;
             if (equalsFlag) landInitialization();
             numInput += ".";
+            resultTextView.setText(numInput);
+            pointFlag = true;
+            signFlag = false;
+        }
+    }
+
+    private double getNumValue() {
+        String num = resultTextView.getText().toString();
+        if (num.matches("[0-9]+\\.?[0-9]*")) return Double.parseDouble(num);
+        else if (num.equals("e")) return Math.E;
+        else if (num.equals("π")) return Math.PI;
+        else throw new RuntimeException("Operator error");
+    }
+
+    public void sin(View view) {
+        try {
+            display = "sin(" + decimalFormat.format(getNumValue()) + ")";
+            numInput = decimalFormat.format(Math.sin(getNumValue()));
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            equalsFlag = true;
             resultTextView.setText(numInput);
         }
     }
 
-    private String getStr(View view) {
-        Button button = (Button) view;
-        return button.getText().toString();
+    public void cos(View view) {
+        try {
+            display = "cos(" + decimalFormat.format(getNumValue()) + ")";
+            numInput = decimalFormat.format(Math.cos(getNumValue()));
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            equalsFlag = true;
+            resultTextView.setText(numInput);
+        }
     }
 
-    private void show() {
-        StringBuilder stringBuilder = new StringBuilder(show);
-        for (String s : saveStack) stringBuilder.append(s);
-        showTextView.setText(stringBuilder);
+    public void tan(View view) {
+        try {
+            display = "tan(" + decimalFormat.format(getNumValue()) + ")";
+            numInput = decimalFormat.format(Math.tan(getNumValue()));
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            equalsFlag = true;
+            resultTextView.setText(numInput);
+        }
+    }
+
+    public void ln(View view) {
+        try {
+            display = "ln(" + decimalFormat.format(getNumValue()) + ")";
+            numInput = decimalFormat.format(Math.log(getNumValue()) / Math.log(Math.E));
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            equalsFlag = true;
+            resultTextView.setText(numInput);
+        }
+    }
+
+    public void lg(View view) {
+        try {
+            display = "lg(" + decimalFormat.format(getNumValue()) + ")";
+            numInput = decimalFormat.format(Math.log(getNumValue()));
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            equalsFlag = true;
+            resultTextView.setText(numInput);
+        }
+    }
+
+    public void factorial(View view) {
+        try {
+            display = "(" + decimalFormat.format(getNumValue()) + ")!";
+            numInput = String.valueOf(factorial((long) getNumValue()));
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            equalsFlag = true;
+            resultTextView.setText(numInput);
+        }
+    }
+
+    public static long factorial(long number) {
+        return number <= 1 ? 1 : number * factorial(number - 1);
+    }
+
+    public void sqrt(View view) {
+        try {
+            display = "sqrt(" + decimalFormat.format(getNumValue()) + ")";
+            numInput = decimalFormat.format(Math.sqrt(getNumValue()));
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            equalsFlag = true;
+            resultTextView.setText(numInput);
+        }
+    }
+
+    public void back(View view) {
+        show = resultTextView.getText().toString();
+        if (show.equals("")) {
+            if (showStack.isEmpty()) return;
+            if (!(show = showStack.pop()).matches("[0-9]+\\.?[0-9]*")) show = "#";
+            saveStack.pop();
+        }
+        show = show.substring(0, show.length() - 1);
+        showText();
+        resultTextView.setText(numInput = show);
+        if (!show.equals("") && show.charAt(show.length() - 1) == '.') pointFlag = true;
+        else if (show.equals("") && !showStack.isEmpty()) {
+            if ("+-*/^%".contains(showStack.peek())) signFlag = true;
+            else if (showStack.pop().matches("[0-9]+\\.?[0-9]*")) {
+                resultTextView.setText(showStack.peek());
+                saveStack.pop();
+            }
+        }
     }
 }

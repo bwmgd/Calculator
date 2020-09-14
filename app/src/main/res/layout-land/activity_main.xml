@@ -21,6 +21,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorTextBackground"
                 android:textSize="30sp"
+                android:paddingEnd="5dp"
                 android:layout_columnSpan="7"
                 android:layout_gravity="fill"
                 android:layout_marginBottom="10dp"
@@ -50,7 +51,8 @@
                 android:layout_gravity="fill"
                 android:background="@color/colorTextBackground"
                 android:layout_margin="3dp"
-                android:textSize="20sp"
+                android:textSize="25sp"
+                android:paddingEnd="3dp"
                 android:textAlignment="textEnd" tools:ignore="RtlCompat"/>
 
         <Button

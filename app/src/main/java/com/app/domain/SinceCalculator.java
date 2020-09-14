@@ -12,7 +12,9 @@ public class SinceCalculator {
         //创建一个list用于保存后缀表达式
         List<String> suffixList = new ArrayList<>();
         for (String item : stack) {
-            if (item.matches("[0-9]+.?[0-9]*")) suffixList.add(item); //是数字则直接入队
+            if (item.equals("e")) item = String.valueOf(Math.E);
+            else if (item.equals("π")) item = String.valueOf(Math.PI);
+            if (item.matches("-?[0-9]+\\.?[0-9]*")) suffixList.add(item); //是数字则直接入队
             else if ("(".equals(item)) opStack.push(item); //是左括号，压栈
             else if (")".equals(item)) {
                 //是右括号 ，将栈中元素弹出入队，直到遇到左括号，左括号出栈，但不入队
@@ -71,7 +73,7 @@ public class SinceCalculator {
         List<String> list = Conversion(suffixList);
         Stack<BigDecimal> stack = new Stack<>();
         for (String item : list) {
-            if (item.matches("[0-9]+.?[0-9]*")) stack.push(new BigDecimal(item)); //是数字
+            if (item.matches("-?[0-9]+\\.?[0-9]*")) stack.push(new BigDecimal(item)); //是数字
             else {
                 //是操作符，取出栈顶两个元素
                 BigDecimal num2 = stack.pop();
