@@ -274,6 +274,9 @@ public class Conversion extends AppCompatActivity {
             case "二进制":
                 d = Integer.parseInt(c, 2);
                 break;
+            case "十进制":
+                d = Integer.parseInt(c);
+                break;
             case "八进制":
                 d = Integer.parseInt(c, 8);
                 break;
