@@ -205,9 +205,9 @@ public class Conversion extends AppCompatActivity {
         return null;
     }
 
-    private static int indexOf(Object object) {
+    private static int indexOf(Object object, Object[] objects) {
         int i = 0;
-        for (Object o : Conversion.lengthList) {
+        for (Object o : objects) {
             i++;
             if (object.equals(o)) return i;
         }
@@ -217,13 +217,13 @@ public class Conversion extends AppCompatActivity {
     private static final double[] length = {1, 1000, 10000, 100, 1000, 1.609344};
 
     private static String length(String a, String b, String c) {
-        return getString(a, b, c, length);
+        return getString(a, b, c, length, lengthList);
     }
 
     private static final double[] weight = {1, 1000, 0.02835, 16};
 
     private static String weight(String a, String b, String c) {
-        return getString(a, b, c, weight);
+        return getString(a, b, c, weight, weightList);
     }
 
     private static String angle(String a, String b, String c) {
@@ -257,14 +257,14 @@ public class Conversion extends AppCompatActivity {
     private static final double[] time = {1, 60, 60, 24};
 
     private static String time(String a, String b, String c) {
-        return getString(a, b, c, time);
+        return getString(a, b, c, time, timeList);
     }
 
     @NotNull
-    private static String getString(String a, String b, String c, double[] doubles) {
+    private static String getString(String a, String b, String c, double[] doubles, String[] strings) {
         double d = Double.parseDouble(c);
-        for (int i = indexOf(a) - 1; i >= 0; i--) d /= doubles[i];
-        for (int i = 0; i < indexOf(b); i++) d *= doubles[i];
+        for (int i = 0; i < indexOf(a, strings); i++) d *= doubles[i];
+        for (int i = 0; i < indexOf(b, strings); i++) d /= doubles[i];
         return String.valueOf(d);
     }
 
