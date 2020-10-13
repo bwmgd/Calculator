@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 /app/
+!/key.jks
+key.jks

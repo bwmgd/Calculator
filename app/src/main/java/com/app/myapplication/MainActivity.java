@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.app.domain.SinceCalculator;
 import com.example.myapplication.R;
 
@@ -26,16 +26,56 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultTextView;
 
 
+    private static final DecimalFormat decimalFormat = new DecimalFormat("###################.###########"); //小数格式化
+    private String sign = "+"; //符号控制
+    private BigDecimal numSave = BigDecimal.ZERO;  //内部储存数字
+    private String numInput = "0";  //输入框文本
+    private String show = "";  //显示框文本
+    private boolean signFlag = false;  //各种标志
+    private String display = "";  //科学计算器文本
+    private boolean equalsFlag = false;
+    private boolean pointFlag = false;
+    //科学计算器
+    private Stack<String> saveStack;  //保存的元素
+    private Stack<String> showStack;  //显示的元素
+    private int leftBreakCount;  //左括号数量
+    private int rightBreakCount;  //右括号数量
+
+    public static long factorial(long number) {  //阶乘递归
+        return number <= 1 ? 1 : number * factorial(number - 1);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    private void flagReset() {
+        equalsFlag = false;
+        signFlag = false;
+        pointFlag = false;
+    }
+
+    private void initialization() {
+        flagReset();
+        sign = "+";
+        numSave = BigDecimal.ZERO;
+        numInput = "0";
+        show = "";
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //关联任务栏
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         GridLayout gridLayout = findViewById(R.id.gridLayout);
         showTextView = findViewById(R.id.input_textView);
         resultTextView = findViewById(R.id.output_textView);
-        if (isOrientation()) {
-            for (int i = 0; i < gridLayout.getChildCount(); i++) {
+        if (isOrientation()) { //竖屏模式
+            for (int i = 0; i < gridLayout.getChildCount(); i++) { //循环绑定事件
                 final Button button = (Button) gridLayout.getChildAt(i);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -63,30 +103,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull @org.jetbrains.annotations.NotNull MenuItem item) {
         Intent intent = new Intent(MainActivity.this, Conversion.class);
-        intent.putExtra("itemID", item.getItemId());
+        intent.putExtra("itemID", item.getItemId()); //传递点击的菜单内容进行单位换算
         startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
 
-    private String sign = "+";
-    private BigDecimal numSave = BigDecimal.ZERO;
-    private String numInput = "0";
-    private String show = "";
-    private boolean signFlag = false;
-    private boolean equalsFlag = false;
-    private boolean pointFlag = false;
-    private String display = "";
-    private static final DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
-
-    private void calculation(String str) {
+    private void calculation(String str) { //标准计算器
         switch (str) {
             case "+":
             case "-":
@@ -94,36 +118,36 @@ public class MainActivity extends AppCompatActivity {
             case "/":
                 equalsFlag = false;
                 pointFlag = false;
-                numSave = result(str);
+                numSave = result(str);  //四则运算
                 sign = str;
-                resultTextView.setText(numSave.stripTrailingZeros().toString());
+                resultTextView.setText(numSave.stripTrailingZeros().toString());  //显示文本
                 signFlag = true;
                 break;
             case "=":
                 signFlag = false;
                 equalsFlag = true;
                 pointFlag = false;
-                numSave = result(str);
+                numSave = result(str);  //结果计算
                 show = numSave.stripTrailingZeros().toString();
                 resultTextView.setText(show);
                 break;
             case "C":
-                initialization();
+                initialization();  //初始化
                 resultTextView.setText(numInput);
                 break;
             case "CE":
-                flagReset();
+                flagReset();  //标志初始化
                 numInput = "0";
                 resultTextView.setText(numInput);
                 break;
             case "back":
-                if (!numInput.equals("")) {
+                if (!numInput.equals("")) {  //退格键
                     numInput = numInput.length() == 1 ? "0" : numInput.substring(0, numInput.length() - 1);
                     resultTextView.setText(numInput);
                 }
                 break;
             case ".":
-                if (!pointFlag) {
+                if (!pointFlag) {  //小数点,禁止输入多次
                     pointFlag = true;
                     signFlag = false;
                     if (equalsFlag) initialization();
@@ -131,40 +155,30 @@ public class MainActivity extends AppCompatActivity {
                     resultTextView.setText(numInput);
                 }
                 break;
-            default:
+            default:  //数字
                 signFlag = false;
                 if (equalsFlag) initialization();
                 numInput = numInput.equals("0") ? str : (numInput + str);
                 resultTextView.setText(numInput);
                 break;
         }
-        showTextView.setText(show);
+        showTextView.setText(show);  //显示文本
         Log.i("show", show);
         Log.i("result", numInput);
     }
 
-    private void flagReset() {
-        equalsFlag = false;
-        signFlag = false;
-        pointFlag = false;
-    }
-
-    private void initialization() {
-        flagReset();
-        sign = "+";
-        numSave = BigDecimal.ZERO;
-        numInput = "0";
-        show = "";
+    private boolean isOrientation() {
+        return this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
     private BigDecimal result(String str) {
         if (signFlag) {
-            show = show.substring(0, show.length() - 1) + str;
+            show = show.substring(0, show.length() - 1) + str;  //重复输入符号进行更改
             return numSave;
         }
         if (show.equals("")) show = numInput + str;
         else show += numInput + str;
-        BigDecimal num = new BigDecimal(numInput.equals(".") || numInput.equals("") ? "0" : numInput);
+        BigDecimal num = new BigDecimal(numInput.equals(".") || numInput.equals("") ? "0" : numInput);  //文本转高精度数字
         numInput = "";
         switch (sign) {
             case ("+"):
@@ -179,33 +193,23 @@ public class MainActivity extends AppCompatActivity {
         return BigDecimal.ZERO;
     }
 
-
-    private Stack<String> saveStack;
-    private Stack<String> showStack;
-    private int leftBreakCount;
-    private int rightBreakCount;
-
-    private boolean isOrientation() {
-        return this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-    }
-
-    private String getStr(View view) {
+    private String getStr(View view) {  //获取按钮文字
         Button button = (Button) view;
         return button.getText().toString();
     }
 
-    private void showText() {
+    private void showText() {  //显示文本
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : showStack) stringBuilder.append(s);
         showTextView.setText(stringBuilder);
     }
 
-    private void saveNumInput() {
-        if (numInput.matches("\\d+\\.$")) numInput = numInput.substring(0, numInput.length() - 1);
+    private void saveNumInput() {  //保存数字
+        if (numInput.matches("\\d+\\.$")) numInput = numInput.substring(0, numInput.length() - 1);  //去除运算符,保存纯数字
         saves(numInput);
     }
 
-    private void saves(String str) {
+    private void saves(String str) {  //保存符号
         if (display.equals("")) showStack.add(str);
         else {
             showStack.add(display);
@@ -214,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         saveStack.add(str);
     }
 
-    private void landInitialization() {
+    private void landInitialization() {  //横屏科学计算器的初始化
         initialization();
         display = "";
         showTextView.setText("");
@@ -224,12 +228,12 @@ public class MainActivity extends AppCompatActivity {
         leftBreakCount = rightBreakCount = 0;
     }
 
-    public void piORe(View view) {
+    public void piORe(View view) {  //Π或e的输入
         String str = getStr(view);
         if (!signFlag) {
             numInput = resultTextView.getText().toString();
-            if (!numInput.equals("") && !numInput.equals("0")) saveNumInput();
-            if (!saveStack.isEmpty()) saves("*");
+            if (!numInput.equals("") && !numInput.equals("0")) saveNumInput();  //为空或为0替换文本
+            if (!saveStack.isEmpty()) saves("*");  //计算如3Π的连续运算
         }
         if (equalsFlag) landInitialization();
         numInput = str;
@@ -238,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         signFlag = false;
     }
 
-    public void leftBreak(View view) {
+    public void leftBreak(View view) {  //左括号
         if (!signFlag) {
             numInput = resultTextView.getText().toString();
             if (!numInput.equals("") && !numInput.equals("0")) saveNumInput();
@@ -253,9 +257,18 @@ public class MainActivity extends AppCompatActivity {
         numInput = "0";
     }
 
-    public void rightBreak(View view) {
+    public void clear(View view) {
+        landInitialization();
+    }
+
+    public void clearErr(View view) {
+        numInput = "0";
+        resultTextView.setText("0");
+    }
+
+    public void rightBreak(View view) {  //右括号
         if (leftBreakCount > rightBreakCount) {
-            if (signFlag) {
+            if (signFlag) {  //前一输入为符号时替换符号
                 saveStack.pop();
                 showStack.pop();
             }
@@ -269,38 +282,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void clear(View view) {
-        landInitialization();
-    }
-
-    public void clearErr(View view) {
-        numInput = "0";
-        resultTextView.setText("0");
-    }
-
     public void equals(View view) {
         try {
             if (equalsFlag) landInitialization();
             else {
                 if (signFlag) throw new RuntimeException("Illegal input");
                 saveNumInput();
-                numSave = SinceCalculator.calculate(saveStack);
+                numSave = SinceCalculator.calculate(saveStack);  //运算最终结果
                 showText();
                 showTextView.setText(showTextView.getText() + "=");
                 resultTextView.setText(numSave.stripTrailingZeros().toPlainString());
             }
         } catch (Exception e) {
-            landInitialization();
+            landInitialization();  //非法计算后初始化计算器
             showTextView.setText(e.getMessage());
             Log.getStackTraceString(e);
         } finally {
             flagReset();
             equalsFlag = true;
         }
-    }
-
-    public void mod(View view) {
-        operation("%");
     }
 
     public void power(View view) {
@@ -311,7 +311,11 @@ public class MainActivity extends AppCompatActivity {
         operation(getStr(view));
     }
 
-    private void operation(String str) {
+    public void mod(View view) {
+        operation("%");
+    }//运算符转化
+
+    private void operation(String str) {  //高级运算(四则,幂,求余)
         if (signFlag) {
             saveStack.pop();
             showStack.pop();
@@ -333,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
         pointFlag = false;
     }
 
-    public void digital(View view) {
+    public void digital(View view) {  //数字输入
         String str = getStr(view);
         if (equalsFlag) landInitialization();
         numInput = numInput.equals("0") ? str : (numInput + str);
@@ -341,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
         signFlag = false;
     }
 
-    public void point(View view) {
+    public void point(View view) {  //小数点输入
         if (!pointFlag) {
             if (equalsFlag) landInitialization();
             numInput += ".";
@@ -351,25 +355,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private double getNumValue() {
+    private double getNumValue() {  //文本转数字,解析e和Π
         String num = resultTextView.getText().toString();
         if (num.matches("[0-9]+\\.?[0-9]*")) return Double.parseDouble(num);
         else if (num.equals("e")) return Math.E;
         else if (num.equals("π")) return Math.PI;
         else throw new RuntimeException("Operator error");
-    }
-
-    public void sin(View view) {
-        try {
-            display = "sin(" + decimalFormat.format(getNumValue()) + ")";
-            numInput = decimalFormat.format(Math.sin(getNumValue()));
-        } catch (RuntimeException e) {
-            landInitialization();
-            showTextView.setText(e.getMessage());
-        } finally {
-            signFlag = false;
-            resultTextView.setText(numInput);
-        }
     }
 
     public void cos(View view) {
@@ -424,7 +415,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void factorial(View view) {
+    public void sin(View view) {  //其他函数运算
+        try {
+            display = "sin(" + decimalFormat.format(getNumValue()) + ")";  //显示状态
+            numInput = decimalFormat.format(Math.sin(getNumValue()));  //保存运算后的数字
+        } catch (RuntimeException e) {
+            landInitialization();
+            showTextView.setText(e.getMessage());
+        } finally {
+            signFlag = false;
+            resultTextView.setText(numInput);
+        }
+    }
+
+    public void factorial(View view) {  //阶乘运算
         try {
             display = "(" + decimalFormat.format(getNumValue()) + ")!";
             numInput = String.valueOf(factorial((long) getNumValue()));
@@ -435,10 +439,6 @@ public class MainActivity extends AppCompatActivity {
             signFlag = false;
             resultTextView.setText(numInput);
         }
-    }
-
-    public static long factorial(long number) {
-        return number <= 1 ? 1 : number * factorial(number - 1);
     }
 
     public void sqrt(View view) {
@@ -454,7 +454,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void back(View view) {
+    public void back(View view) {  //退格键
         if (equalsFlag) {
             String numInput = resultTextView.getText().toString();
             landInitialization();
@@ -462,18 +462,18 @@ public class MainActivity extends AppCompatActivity {
             resultTextView.setText(numInput);
         }
         show = resultTextView.getText().toString();
-        if (show.equals("")) {
-            if (showStack.isEmpty()) return;
-            if (!(show = showStack.pop()).matches("[0-9]+\\.?[0-9]*")) show = "#";
+        if (show.equals("")) { //若显示框文本为空
+            if (showStack.isEmpty()) return;  //列表为空,不进行操作
+            if (!(show = showStack.pop()).matches("[0-9]+\\.?[0-9]*")) show = "#";  //令显示文本为栈顶弹出,若为不数字,显示文本保留一位而后置空
             saveStack.pop();
         }
-        show = show.substring(0, show.length() - 1);
+        show = show.substring(0, show.length() - 1); //退格
         showText();
-        resultTextView.setText(numInput = show);
-        if (!show.equals("") && show.charAt(show.length() - 1) == '.') pointFlag = true;
-        else if (show.equals("") && !showStack.isEmpty()) {
-            if ("+-*/^%".contains(showStack.peek())) signFlag = true;
-            else if (showStack.peek().matches("[0-9]+\\.?[0-9]*")) {
+        resultTextView.setText(numInput = show);  //文本置入选择框
+        if (!show.equals("") && show.charAt(show.length() - 1) == '.') pointFlag = true;  //遇到小数点还原标志
+        else if (show.equals("") && !showStack.isEmpty()) {  //若显示框无文本
+            if ("+-*/^%".contains(showStack.peek())) signFlag = true;  //符号判断
+            else if (showStack.peek().matches("[0-9]+\\.?[0-9]*")) {  //数字置顶
                 resultTextView.setText(showStack.pop());
                 saveStack.pop();
             }
