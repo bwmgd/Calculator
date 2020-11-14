@@ -12,7 +12,6 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import com.app.domain.SinceCalculator;
 import com.example.myapplication.R;
 
@@ -70,25 +69,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //关联任务栏
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
         GridLayout gridLayout = findViewById(R.id.gridLayout);
         showTextView = findViewById(R.id.input_textView);
         resultTextView = findViewById(R.id.output_textView);
         if (isOrientation()) { //竖屏模式
             for (int i = 0; i < gridLayout.getChildCount(); i++) { //循环绑定事件
                 final Button button = (Button) gridLayout.getChildAt(i);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String s = button.getText().toString();
-                        Log.v("chick", sign + "," + numInput + "," + numSave + "," + show);
-                        try {
-                            calculation(s);
-                        } catch (ArithmeticException e) {
-                            initialization();
-                            showTextView.setText(e.getMessage());
-                            Log.getStackTraceString(e);
-                        }
+                button.setOnClickListener(v -> {
+                    String s = button.getText().toString();
+                    Log.v("chick", sign + "," + numInput + "," + numSave + "," + show);
+                    try {
+                        calculation(s);
+                    } catch (ArithmeticException e) {
+                        initialization();
+                        showTextView.setText(e.getMessage());
+                        Log.getStackTraceString(e);
                     }
                 });
             }
@@ -120,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 pointFlag = false;
                 numSave = result(str);  //四则运算
                 sign = str;
-                resultTextView.setText(numSave.stripTrailingZeros().toString());  //显示文本
+                resultTextView.setText(decimalFormat.format(numSave));  //显示文本
                 signFlag = true;
                 break;
             case "=":
@@ -128,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 equalsFlag = true;
                 pointFlag = false;
                 numSave = result(str);  //结果计算
-                show = numSave.stripTrailingZeros().toString();
+                show = decimalFormat.format(numSave);
                 resultTextView.setText(show);
                 break;
             case "C":
